@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foodies Restaurant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+     <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+ 
+        :root {
+            --bg-dark:     #1e1409;
+            --bg-mid:      #302014;
+            --bg-card:     #261c15;
+            --bg-card2:    #302014d2;
+            --gold:        #D4AF37;
+            --gold-light:  #FFD700;
+            --gold-pale:   #ffd277;
+            --orange:      #ff6a00;
+            --cream:       #EAE0D5;
+            --cream-warm:  #ebcba9;
+            --shadow-gold: #fac519;
+            --max-w:       1100px;
+        }
+ 
+        body {
+            background-color: var(--bg-mid);
+            color: var(--cream);
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+ 
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+ 
+        .wrapper {
+            width: 100%;
+            max-width: var(--max-w);
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+ 
+        .nav {
+            position: sticky; top: 0; z-index: 200;
+            background: rgba(30, 20, 9, 0.92);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(212,175,55,0.2);
+        }
+        .nav-inner {
+            max-width: var(--max-w);
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            gap: 1rem;
+        }
+        .nav-logo h3 {
+            color: var(--gold);
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            letter-spacing: 0.12em;
+            text-decoration: line-through;
+            text-decoration-color: var(--orange);
+            white-space: nowrap;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            color: var(--cream);
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            transition: color 0.3s;
+            white-space: nowrap;
+        }
+        .nav-links a:hover { color: var(--gold); }
+ 
+        .search-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .search-input {
+            width: 70px;
+            color: var(--shadow-gold);
+            background-color: #3a281b;
+            padding: 8px 8px 8px 36px;
+            border-radius: 9999px;
+            border: 2px solid var(--shadow-gold);
+            outline: none;
+            font-size: 0.8rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: width 0.4s ease;
+            opacity: 0.85;
+        }
+        .search-input:focus { width: 150px; opacity: 1; }
+        .search-icon {
+            position: absolute; left: 10px; top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+        .search-icon path { fill: var(--shadow-gold); }
+ 
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+        .hamburger span {
+            display: block; width: 24px; height: 2px;
+            background: var(--gold);
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+        .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+ 
+        .nav-mobile {
+            display: none;
+            flex-direction: column;
+            background: rgba(30,20,9,0.98);
+            border-top: 1px solid rgba(212,175,55,0.15);
+            padding: 1.2rem 1.5rem 1.5rem;
+            gap: 1rem;
+        }
+        .nav-mobile.open { display: flex; }
+        .nav-mobile a {
+            color: var(--cream); text-decoration: none;
+            font-size: 1rem; font-weight: 500;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(212,175,55,0.1);
+        }
+        .nav-mobile a:hover { color: var(--gold); }
+ 
+        .hero {
+            min-height: 88vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 30px rgba(250,197,25,0.25);
+            background-color: var(--bg-card);
+            max-width: var(--max-w);
+            margin: 2rem auto;
+        }
+ 
+        .hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: 0.4; pointer-events: none; z-index: 1;
+        }
+ 
+        .hero-glow {
+            position: absolute;
+            width: 600px; height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,106,0,0.12) 0%, transparent 70%);
+            top: -100px; right: -100px;
+            pointer-events: none; z-index: 1;
+        }
+ 
+        .hero-content {
+            position: relative; z-index: 2;
+            padding: 4rem 3rem;
+            flex: 1;
+            max-width: 60%;
+        }
+ 
+        .hero-tag {
+            display: inline-block;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--orange);
+            border: 1px solid rgba(255,106,0,0.4);
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 1.4rem;
+            animation: slideIn 0.8s ease-out both;
+        }
+ 
+        .hero-subtitle {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            color: var(--gold-light);
+            text-decoration: overline;
+            text-decoration-color: var(--orange);
+            margin-bottom: 0.3rem;
+            animation: slideIn 1s ease-out both;
+        }
+ 
+        .hero-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 700;
+            color: var(--orange);
+            text-decoration: underline;
+            text-decoration-color: var(--gold-light);
+            line-height: 1.1;
+            margin-bottom: 1.4rem;
+            animation: slideIn 1s ease-out 0.1s both;
+        }
+ 
+        .hero-desc {
+            color: var(--cream-warm);
+            font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+            line-height: 1.8;
+            max-width: 440px;
+            margin-bottom: 2.5rem;
+            animation: slideIn 1.2s ease-out 0.2s both;
+        }
+ 
+        @keyframes slideIn {
+            from { transform: translateX(-60px); opacity: 0; }
+            to   { transform: translateX(0);     opacity: 1; }
+        }
+ 
+        .btn-order {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 160px; height: 46px;
+            border: none; border-radius: 10px; cursor: pointer;
+            background: linear-gradient(to right, #77530a, #ffd277, #77530a, #77530a, #ffd277, #77530a);
+            background-size: 250%; background-position: left;
+            transition: background-position 1s;
+            position: relative; overflow: hidden;
+            text-decoration: none;
+            animation: slideIn 1.4s ease-out 0.3s both;
+        }
+        .btn-order::before {
+            content: "Order Now — $7.99";
+            position: absolute; inset: 3px;
+            background: rgba(0,0,0,0.84);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--gold-pale);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+        .btn-order:hover { background-position: right; }
+        .btn-order:active { transform: scale(0.96); }
+ 
+        .hero-img-wrap {
+            position: absolute;
+            right: 3rem; top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            animation: floatUp 1.2s ease-out both;
+        }
+        @keyframes floatUp {
+            from { transform: translateY(calc(-50% + 60px)); opacity: 0; }
+            to   { transform: translateY(-50%); opacity: 1; }
+        }
+        .hero-img-wrap img {
+            width: clamp(180px, 22vw, 300px);
+            height: clamp(180px, 22vw, 300px);
+            border-radius: 50%;
+            object-fit: cover;
+            filter: brightness(0.85);
+            border: 3px solid rgba(212,175,55,0.4);
+            box-shadow: 0 0 40px rgba(250,197,25,0.2);
+        }
+ 
+        .hero-img-placeholder {
+            width: clamp(180px, 22vw, 300px);
+            height: clamp(180px, 22vw, 300px);
+            border-radius: 50%;
+            background: radial-gradient(circle at 40% 40%, #5a3a1a, #261c15);
+            border: 3px solid rgba(212,175,55,0.4);
+            box-shadow: 0 0 40px rgba(250,197,25,0.2);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            color: var(--gold);
+            letter-spacing: 0.1em;
+        }
+ 
+        .menu-section {
+            max-width: var(--max-w);
+            margin: 4rem auto;
+            background-color: var(--bg-card2);
+            border: 2px solid rgba(212,175,55,0.3);
+            box-shadow: 0 0 20px #694933;
+            border-radius: 4px;
+            padding: 3rem 2rem;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.9s ease-out, transform 0.9s ease-out;
+        }
+        .menu-section.in-view { opacity: 1; transform: translateY(0); }
+ 
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.4rem, 3vw, 2rem);
+            color: var(--shadow-gold);
+            text-decoration: underline;
+            text-decoration-color: var(--orange);
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+ 
+        .menu-track-wrap {
+            position: relative;
+        }
+        .menu-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            gap: 1rem;
+            padding: 0.5rem 0 1rem;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .menu-container::-webkit-scrollbar { display: none; }
+ 
+        .arrow-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            z-index: 10; cursor: pointer;
+            color: var(--shadow-gold); font-size: 2rem;
+            background: rgba(30,20,9,0.7);
+            border: 1px solid rgba(212,175,55,0.3);
+            border-radius: 50%;
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            user-select: none;
+            transition: background 0.2s;
+            text-decoration: none;
+        }
+        .arrow-btn:hover { background: rgba(212,175,55,0.15); }
+        .arrow-left  { left: -20px; }
+        .arrow-right { right: -20px; }
+ 
+        .item-card {
+            flex: 0 0 190px;
+            height: 240px;
+            border-radius: 16px;
+            background: linear-gradient(170deg, rgba(58,56,56,0.62) 0%, #1f1f1f 100%);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            cursor: pointer;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            text-align: center; padding: 1rem;
+            opacity: 0; transform: translateY(40px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out, scale 0.3s;
+            border: 1px solid rgba(212,175,55,0.1);
+        }
+        .item-card.in-view { opacity: 1; transform: translateY(0); }
+        .item-card:hover { scale: 0.93; border-color: rgba(212,175,55,0.35); }
+        .item-card img {
+            width: 130px; height: 120px;
+            object-fit: cover; border-radius: 10px;
+            margin-bottom: 0.6rem;
+        }
+        .item-card .head1, .item-card .head2 {
+            background: linear-gradient(to bottom, #cfc09f 27%, #ffecb3 40%, #855c0b 78%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .item-card .head1 { font-size: 1rem; }
+        .item-card .head2 { font-size: 0.8rem; opacity: 0.85; }
+ 
+        .view-more {
+            display: block; text-align: center;
+            margin-top: 2rem;
+            color: var(--shadow-gold);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600; font-size: 1rem;
+            text-decoration: none;
+            letter-spacing: 0.05em;
+            transition: color 0.3s;
+        }
+        .view-more:hover { color: var(--gold); }
+ 
+        .features {
+            max-width: var(--max-w);
+            margin: 4rem auto;
+            padding: 0 1.5rem;
+            opacity: 0; transform: translateY(40px);
+            transition: opacity 0.9s ease-out, transform 0.9s ease-out;
+        }
+        .features.in-view { opacity: 1; transform: translateY(0); }
+        .features-header { text-align: center; margin-bottom: 3rem; }
+        .features-eyebrow {
+            font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--orange); margin-bottom: 0.8rem;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(212,175,55,0.18);
+            border-radius: 12px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .feature-card:hover { border-color: rgba(212,175,55,0.5); transform: translateY(-4px); }
+        .feature-icon {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .feature-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--gold);
+            margin-bottom: 0.6rem;
+        }
+        .feature-desc {
+            font-size: 0.82rem;
+            color: var(--cream-warm);
+            line-height: 1.75;
+            opacity: 0.85;
+        }
+ 
+        .testimonials {
+            max-width: var(--max-w);
+            margin: 4rem auto;
+            padding: 3rem 1.5rem;
+            border-top: 1px solid rgba(212,175,55,0.15);
+            opacity: 0; transform: translateY(40px);
+            transition: opacity 0.9s, transform 0.9s;
+        }
+        .testimonials.in-view { opacity: 1; transform: translateY(0); }
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+        }
+        .testi-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(212,175,55,0.15);
+            border-radius: 12px;
+            padding: 1.6rem;
+            transition: border-color 0.3s;
+        }
+        .testi-card:hover { border-color: rgba(212,175,55,0.4); }
+        .testi-stars { color: var(--gold); font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 0.8rem; }
+        .testi-text {
+            font-size: 0.83rem; color: var(--cream-warm);
+            line-height: 1.75; font-style: italic;
+            margin-bottom: 1.2rem;
+        }
+        .testi-name { font-size: 0.8rem; color: var(--gold); font-weight: 600; letter-spacing: 0.05em; }
+ 
+        .cta-banner {
+            max-width: var(--max-w);
+            margin: 4rem auto;
+            background: linear-gradient(135deg, #261c15 0%, #3a2510 50%, #261c15 100%);
+            border: 2px solid rgba(212,175,55,0.35);
+            box-shadow: 0 0 40px rgba(250,197,25,0.1);
+            border-radius: 4px;
+            padding: 4rem 2rem;
+            text-align: center;
+            opacity: 0; transform: translateY(40px);
+            transition: opacity 0.9s, transform 0.9s;
+        }
+        .cta-banner.in-view { opacity: 1; transform: translateY(0); }
+        .cta-banner h2 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+            color: var(--gold-light);
+            margin-bottom: 1rem;
+        }
+        .cta-banner p {
+            color: var(--cream-warm); font-size: 0.9rem;
+            max-width: 480px; margin: 0 auto 2rem;
+            line-height: 1.8;
+        }
+        .btn-cta {
+            display: inline-block;
+            padding: 14px 36px;
+            background: linear-gradient(to right, #77530a, #ffd277, #77530a, #77530a, #ffd277, #77530a);
+            background-size: 250%; background-position: left;
+            border: none; border-radius: 10px;
+            color: var(--bg-dark);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem; font-weight: 700;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            cursor: pointer; text-decoration: none;
+            transition: background-position 1s, transform 0.2s;
+        }
+        .btn-cta:hover { background-position: right; }
+        .btn-cta:active { transform: scale(0.97); }
+ 
+        footer {
+            background: var(--bg-dark);
+            border-top: 1px solid rgba(212,175,55,0.2);
+            padding: 3rem 1.5rem 2rem;
+        }
+        .footer-inner {
+            max-width: var(--max-w);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+        }
+        .footer-brand h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: var(--gold);
+            text-decoration: line-through;
+            text-decoration-color: var(--orange);
+            margin-bottom: 0.8rem;
+        }
+        .footer-brand p {
+            font-size: 0.82rem; color: var(--cream-warm);
+            line-height: 1.75; opacity: 0.8;
+        }
+        .footer-col h4 {
+            font-family: 'Playfair Display', serif;
+            color: var(--gold); font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 0.5rem; }
+        .footer-col ul li a {
+            color: var(--cream-warm); text-decoration: none;
+            font-size: 0.82rem; opacity: 0.8;
+            transition: color 0.3s, opacity 0.3s;
+        }
+        .footer-col ul li a:hover { color: var(--gold); opacity: 1; }
+        .footer-bottom {
+            max-width: var(--max-w); margin: 2rem auto 0;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(212,175,55,0.1);
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.75rem; color: var(--cream-warm); opacity: 0.5;
+            flex-wrap: wrap; gap: 0.5rem;
+        }
+ 
+        @media (max-width: 900px) {
+            .features-grid,
+            .testimonials-grid { grid-template-columns: 1fr 1fr; }
+            .footer-inner { grid-template-columns: 1fr 1fr; }
+            .footer-brand { grid-column: 1 / -1; }
+        }
+ 
+        @media (max-width: 640px) {
+            .nav-links, .search-wrap { display: none; }
+            .hamburger { display: flex; }
+ 
+            .hero {
+                flex-direction: column;
+                min-height: auto;
+                padding-bottom: 2rem;
+                margin: 1rem;
+                text-align: center;
+            }
+            .hero-content {
+                max-width: 100%;
+                padding: 2.5rem 1.5rem 1.5rem;
+            }
+            .hero-desc { max-width: 100%; }
+            .btn-order { margin: 0 auto; }
+            .hero-img-wrap {
+                position: relative; right: auto; top: auto;
+                transform: none; margin: 0 auto 1.5rem;
+            }
+            @keyframes floatUp {
+                from { transform: translateY(20px); opacity: 0; }
+                to   { transform: translateY(0); opacity: 1; }
+            }
+            .hero-img-wrap img,
+            .hero-img-placeholder {
+                width: 160px; height: 160px;
+            }
+ 
+            .menu-section { margin: 2rem 1rem; padding: 2rem 1rem; }
+            .arrow-btn { display: none; }
+            .item-card { flex: 0 0 160px; height: 210px; }
+            .item-card img { width: 110px; height: 100px; }
+ 
+            .features { padding: 0 1rem; }
+            .features-grid,
+            .testimonials-grid { grid-template-columns: 1fr; }
+ 
+            .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+            .footer-bottom { flex-direction: column; text-align: center; }
+ 
+            .cta-banner { margin: 2rem 1rem; padding: 2.5rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+ 
+<nav class="nav" role="navigation">
+    <div class="nav-inner">
+        <div class="nav-logo"><h3>FOODIES</h3></div>
+        <ul class="nav-links">
+            <li><a href="whyFoodies.html">Why FOODIES?</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="https://maps.app.goo.gl/XdQrggEP1inujdKu9" target="_blank">Location</a></li>
+        </ul>
+        <div class="search-wrap">
+            <input type="text" placeholder="Search…" class="search-input" aria-label="Search menu" />
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg">
+                <path d="M790.588 1468.235c-373.722 0-677.647-303.924-677.647-677.647 0-373.722 303.925-677.647 677.647-677.647 373.723 0 677.647 303.925 677.647 677.647 0 373.723-303.924 677.647-677.647 677.647Zm596.781-160.715c120.396-138.692 193.807-319.285 193.807-516.932C1581.176 354.748 1226.428 0 790.588 0S0 354.748 0 790.588s354.748 790.588 790.588 790.588c197.647 0 378.24-73.411 516.932-193.807l516.028 516.142 79.963-79.963-516.142-516.028Z" fill-rule="evenodd"/>
+            </svg>
+        </div>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+    <nav class="nav-mobile" id="navMobile" role="menu">
+        <a href="whyFoodies.html">Why FOODIES?</a>
+        <a href="menu.html">Menu</a>
+        <a href="https://maps.app.goo.gl/XdQrggEP1inujdKu9" target="_blank">Location</a>
+    </nav>
+</nav>
+ 
+<section class="hero" id="home" aria-label="Featured item">
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+        <span class="hero-tag">Today's Special</span>
+        <p class="hero-subtitle">Special</p>
+        <h1 class="hero-title">Crown Crust</h1>
+        <p class="hero-desc">Rule your cravings with our signature Crown Crust — a golden, jewel-studded masterpiece overflowing with decadent cheese. It's not just a pizza; it's a royal feast crafted for the ultimate foodie.</p>
+        <a href="menu.html" class="btn-order" aria-label="Order Crown Crust for $7.99"></a>
+    </div>
+    <div class="hero-img-wrap">
+        <div class="hero-img-placeholder" aria-label="Crown Crust pizza image">
+            👑 Crown<br>Crust
+        </div>
+    </div>
+</section>
+ 
+<section class="menu-section" id="menu" aria-label="Explore our menu">
+    <h2 class="section-title">Explore Menu</h2>
+    <div class="menu-track-wrap">
+        <button class="arrow-btn arrow-left" onclick="scrollMenu(-1)" aria-label="Scroll left">&#8592;</button>
+        <div class="menu-container" id="menuContainer">
+            <div class="item-card">
+                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300&h=200&fit=crop" alt="Margherita Pizza" loading="lazy"/>
+                <p class="head1">Margherita</p><p class="head2">Pizza</p>
+            </div>
+            <div class="item-card">
+                <img src="https://images.unsplash.com/photo-1628840042765-356cda07504e?w=300&h=200&fit=crop" alt="Pepperoni Pizza" loading="lazy"/>
+                <p class="head1">Pepperoni</p><p class="head2">Pizza</p>
+            </div>
+            <div class="item-card">
+                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&h=200&fit=crop" alt="Classic Cheeseburger" loading="lazy"/>
+                <p class="head1">Classic</p><p class="head2">Cheeseburger</p>
+            </div>
+            <div class="item-card">
+                <img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=300&h=200&fit=crop" alt="Bacon BBQ Burger" loading="lazy"/>
+                <p class="head1">Bacon BBQ</p><p class="head2">Burger</p>
+            </div>
+            <div class="item-card">
+                <img src="https://images.unsplash.com/photo-1550507992-eb63ffee0847?w=300&h=200&fit=crop" alt="Grilled Chicken Wrap" loading="lazy"/>
+                <p class="head1">Grilled Chicken</p><p class="head2">Wrap</p>
+            </div>
+            <div class="item-card">
+                <img src="https://images.unsplash.com/photo-1505252585461-04db1eb84625?w=300&h=200&fit=crop" alt="Berry Blast Smoothie" loading="lazy"/>
+                <p class="head1">Berry Blast</p><p class="head2">Smoothie</p>
+            </div>
+            <div class="item-card">
+                <img src="https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=300&h=200&fit=crop" alt="Spicy Chicken Wings" loading="lazy"/>
+                <p class="head1">Spicy Chicken</p><p class="head2">Wings</p>
+            </div>
+            <div class="item-card">
+                <img src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=300&h=200&fit=crop" alt="French Fries" loading="lazy"/>
+                <p class="head1">French</p><p class="head2">Fries</p>
+            </div>
+        </div>
+        <button class="arrow-btn arrow-right" onclick="scrollMenu(1)" aria-label="Scroll right">&#8594;</button>
+    </div>
+    <a href="menu.html" class="view-more">View Full Menu →</a>
+</section>
+ 
+<section class="features" id="why" aria-label="Why choose Foodies">
+    <div class="features-header">
+        <p class="features-eyebrow">Why Choose Us</p>
+        <h2 class="section-title" style="margin-bottom:0">The Foodies Difference</h2>
+    </div>
+    <div class="features-grid">
+        <div class="feature-card">
+            <span class="feature-icon">👑</span>
+            <h3 class="feature-title">Royal Quality</h3>
+            <p class="feature-desc">Every dish is crafted with premium ingredients sourced from the finest local farms and international suppliers.</p>
+        </div>
+        <div class="feature-card">
+            <span class="feature-icon">⚡</span>
+            <h3 class="feature-title">Lightning Delivery</h3>
+            <p class="feature-desc">Hot and fresh to your door in under 30 minutes — or your next order is on us. We don't mess around.</p>
+        </div>
+        <div class="feature-card">
+            <span class="feature-icon">🍕</span>
+            <h3 class="feature-title">Secret Recipes</h3>
+            <p class="feature-desc">Our signature sauces and spice blends have been perfected over decades of culinary passion and obsession.</p>
+        </div>
+    </div>
+</section>
+ 
+<section class="testimonials" id="reviews" aria-label="Customer reviews">
+    <p class="features-eyebrow" style="text-align:center">Happy Customers</p>
+    <h2 class="section-title">What People Say</h2>
+    <div class="testimonials-grid">
+        <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-text">"The Crown Crust is absolutely unreal. I've never had anything like it — the cheese blend is out of this world. My whole family was blown away."</p>
+            <p class="testi-name">— Sarah K.</p>
+        </div>
+        <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-text">"Fast delivery, hot food, and the Bacon BBQ Burger? Honestly restaurant quality right at my doorstep. FOODIES is the only place I order from now."</p>
+            <p class="testi-name">— Ahmed R.</p>
+        </div>
+        <div class="testi-card">
+            <div class="testi-stars">★★★★☆</div>
+            <p class="testi-text">"The smoothies are genuinely fresh — you can taste it immediately. The Berry Blast has become my daily ritual. Absolutely love this place."</p>
+            <p class="testi-name">— Zara M.</p>
+        </div>
+    </div>
+</section>
+ 
+<section class="cta-banner" id="order" aria-label="Order now">
+    <h2>Ready to Rule Your Cravings?</h2>
+    <p>Treat yourself to something extraordinary. Every order is a royal experience, crafted just for you.</p>
+    <a href="menu.html" class="btn-cta">Order Now</a>
+</section>
+ 
+<footer role="contentinfo">
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <h3>FOODIES</h3>
+            <p>Crafting pixel-perfect culinary experiences since 2021. Quality food, delivered fast, made with love and a crown on top.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="whyFoodies.html">Why FOODIES?</a></li>
+                <li><a href="menu.html">Our Menu</a></li>
+                <li><a href="https://maps.app.goo.gl/XdQrggEP1inujdKu9" target="_blank">Find Us</a></li>
+                <li><a href="#order">Order Now</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Contact</h4>
+            <ul>
+                <li><a href="tel:+923328597767">+92 332 859 7767</a></li>
+                <li><a href="mailto:m.ammar26may2007@gmail.com">Email Us</a></li>
+                <li><a href="#">Instagram</a></li>
+                <li><a href="#">Facebook</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>© 2025 FOODIES. All rights reserved.</span>
+        <span>Built with ♥ by Muhammad Ammar</span>
+    </div>
+</footer>
+ 
+<script>
+    const ham = document.getElementById('hamburger');
+    const mob = document.getElementById('navMobile');
+    ham.addEventListener('click', () => {
+        ham.classList.toggle('open');
+        mob.classList.toggle('open');
+        ham.setAttribute('aria-expanded', mob.classList.contains('open'));
+    });
+ 
+    function scrollMenu(dir) {
+        document.getElementById('menuContainer').scrollBy({ left: dir * 220, behavior: 'smooth' });
+    }
+ 
+    const revealTargets = document.querySelectorAll('.menu-section, .features, .testimonials, .cta-banner, .item-card');
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach((e, i) => {
+            if (e.isIntersecting) {
+                if (e.target.classList.contains('item-card')) {
+                    setTimeout(() => e.target.classList.add('in-view'), i * 80);
+                } else {
+                    e.target.classList.add('in-view');
+                }
+                io.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    revealTargets.forEach(el => io.observe(el));
+</script>
+</body>
+
+</html>
+
+</html>
+
+<!--  <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300&h=200&fit=crop"
+                        alt="Margherita Pizza">
+                    <h3 class="head1">Margherita</h3>
+                    <h3 class="head2">Pizza</h3>
+                </div>
+                <div class="item-card">
+                    <img src="https://images.unsplash.com/photo-1628840042765-356cda07504e?w=300&h=200&fit=crop"
+                        alt="Pepperoni Pizza">
+                    <h3 class="head1">Pepperoni</h3>
+                    <h3 class="head2">Pizza</h3>
+                </div>
+                <div class="item-card">
+                    <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&h=200&fit=crop"
+                        alt="Classic Burger">
+                    <h3 class="head1">Classic</h3>
+                    <h3 class="head2">Cheeseburger</h3>
+                </div>
+                <div class="item-card">
+                    <img src="https://tse3.mm.bing.net/th/id/OIP.ue2t7hDxF7jLNLvopYgYYgHaLG?pid=Api&P=0&h=220"
+                        alt="Bacon Burger">
+                    <h3 class="head1">Bacon BBQ</h3>
+                    <h3 class="head2">Burger</h3>
+                </div>
+                <div class="item-card">
+                    <img src="https://images.unsplash.com/photo-1550507992-eb63ffee0847?w=300&h=200&fit=crop"
+                        alt="Chicken Wrap">
+                    <h3 class="head1">Grilled Chicken</h3>
+                    <h3 class="head2">Wrap</h3>
+                </div>
+                <div class="item-card">
+                    <img src="https://images.unsplash.com/photo-1505252585461-04db1eb84625?w=300&h=200&fit=crop"
+                        alt="Berry Smoothie">
+                    <h3 class="head1">Berry Blast</h3>
+                    <h3 class="head2">Smoothie</h3>
+                </div>
+                <div class="item-card">
+                    <img src="https://tse3.mm.bing.net/th/id/OIP._IzqPob2LWSqEDhOFatn6QHaFP?pid=Api&P=0&h=220"
+                        alt="Chicken Wings">
+                    <h3 class="head1">Spicy Chicken</h3>
+                    <h3 class="head2">Wings</h3>
+                </div>
+                <div class="item-card">
+                    <img src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=300&h=200&fit=crop"
+                        alt="French Fries"> -->
